@@ -41,15 +41,28 @@ class Crawler(metaclass=ProxyMetaclass):
                     port = tr.find('td:nth-child(2)').text()
                     yield ':'.join([ip,port])
 
-    def crawl_proxy360(self):
-        start_url = 'http://www.goubanjia.com/'
-        html = get_page(start_url)
-        if html:
-            doc = pq(html)
-            trs = doc('tbody tr').items()
-            for tr in trs:
-                ip_port = tr.find('td:nth-child(1)').text()
-                yield ip_port
+    def crawl_kuaidaili(self,page_count=4):
+        start_url = 'https://www.kuaidaili.com/free/inha/{}/'
+        urls = [start_url.format(page) for page in range(1,page_count + 1)]
+        for url in urls:
+            print('Crawling',url)
+            html = get_page(url)
+            if html:
+                doc = pq(html)
+                trs = doc('tbody tr').items()
+                for tr in trs:
+                    ip = tr.find('td:nth-child(1)').text()
+                    port = tr.find('td:nth-child(2)').text()
+                    yield ':'.join([ip,port])
 
     def crawl_xici(self):
         start_url = 'http://www.xicidaili.com/'
+        html = get_page(start_url)
+        if html:
+            doc = pq(html)
+            trs = doc('tr.odd').items()
+            for tr in trs:
+                ip = tr.find('td:nth-child(2)').text()
+                port = tr.find('td:nth-child(3)').text()
+                yield ':'.join([ip,port])
+
