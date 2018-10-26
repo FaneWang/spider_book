@@ -1,5 +1,6 @@
 import json
-from pyquery import pyquery as pq
+from pyquery import PyQuery as pq
+from chapter9.demo2.utils import get_page
 
 
 class ProxyMetaclass(type):
@@ -11,7 +12,7 @@ class ProxyMetaclass(type):
                 attrs['__CrawlFunc__'].append(k)
                 count += 1
         attrs['__CrawlFuncCount__'] = count
-        return super(ProxyMetaclass, cls).__new__(cls, name, bases, attrs)
+        return type.__new__(cls, name, bases, attrs)
 
 
 class Crawler(metaclass=ProxyMetaclass):
@@ -27,11 +28,11 @@ class Crawler(metaclass=ProxyMetaclass):
             proxies.append(proxy)
         return proxies
 
-    def crawl_daili666(self,page_count=4):
+    def crawl_daili666(self, page_count=4):
         start_url = 'http://www.66ip.cn/{}.html'
-        urls = [start_url.format(page) for page in range(1,page_count + 1)]
+        urls = [start_url.format(page) for page in range(1, page_count + 1)]
         for url in urls:
-            print('Crawling',url)
+            print('Crawling', url)
             html = get_page(url)
             if html:
                 doc = pq(html)
@@ -39,13 +40,13 @@ class Crawler(metaclass=ProxyMetaclass):
                 for tr in trs:
                     ip = tr.find('td:nth-child(1)').text()
                     port = tr.find('td:nth-child(2)').text()
-                    yield ':'.join([ip,port])
+                    yield ':'.join([ip, port])
 
-    def crawl_kuaidaili(self,page_count=4):
+    def crawl_kuaidaili(self, page_count=4):
         start_url = 'https://www.kuaidaili.com/free/inha/{}/'
-        urls = [start_url.format(page) for page in range(1,page_count + 1)]
+        urls = [start_url.format(page) for page in range(1, page_count + 1)]
         for url in urls:
-            print('Crawling',url)
+            print('Crawling', url)
             html = get_page(url)
             if html:
                 doc = pq(html)
@@ -53,7 +54,7 @@ class Crawler(metaclass=ProxyMetaclass):
                 for tr in trs:
                     ip = tr.find('td:nth-child(1)').text()
                     port = tr.find('td:nth-child(2)').text()
-                    yield ':'.join([ip,port])
+                    yield ':'.join([ip, port])
 
     def crawl_xici(self):
         start_url = 'http://www.xicidaili.com/'
@@ -64,5 +65,4 @@ class Crawler(metaclass=ProxyMetaclass):
             for tr in trs:
                 ip = tr.find('td:nth-child(2)').text()
                 port = tr.find('td:nth-child(3)').text()
-                yield ':'.join([ip,port])
-
+                yield ':'.join([ip, port])

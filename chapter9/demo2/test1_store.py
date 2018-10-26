@@ -1,13 +1,9 @@
 import redis
 from random import choice
-
-MAX_SCORE = 100
-MIN_SCORE = 0
-INITIAL_SCORE = 10
-REDIS_HOST = '192.168.1.101'
-REDIS_PORT = 6379
-REDIS_PASSWORD = None
-REDIS_KEY = 'proxy'
+from chapter9.demo2.error import PoolEmptyError
+from chapter9.demo2.settings import MAX_SCORE, MIN_SCORE, INITIAL_SCORE, REDIS_KEY, REDIS_PASSWORD, REDIS_PORT, \
+    REDIS_HOST
+import re
 
 
 class RedisClient:
@@ -15,6 +11,9 @@ class RedisClient:
         self.db = redis.StrictRedis(host=host, port=port, password=password, decode_responses=True)
 
     def add(self, proxy, score=INITIAL_SCORE):
+        if not re.match('\d+\.\d+\.\d+\.\d+\:\d+', proxy):
+            print('代理不符合规范', proxy, '丢弃')
+            return
         if not self.db.zscore(REDIS_KEY, proxy):
             return self.db.zadd(REDIS_KEY, score, proxy)
 
@@ -32,7 +31,7 @@ class RedisClient:
     def decrease(self, proxy):
         score = self.db.zscore(REDIS_KEY, proxy)
         if score and score > MIN_SCORE:
-            print('代理', proxy, '当前分数', score, '减一')
+            print('代理', proxy, '当前分数', score, '减1')
             return self.db.zincrby(REDIS_KEY, proxy, -1)
         else:
             print('代理', proxy, '当前分数', score, '移除')
@@ -50,3 +49,6 @@ class RedisClient:
 
     def all(self):
         return self.db.zrangebyscore(REDIS_KEY, MIN_SCORE, MAX_SCORE)
+
+    def batch(self, start, stop):
+        return self.db.zrevrange(REDIS_KEY, start, stop - 1)
