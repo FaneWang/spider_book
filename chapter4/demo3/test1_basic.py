@@ -13,4 +13,4 @@ html = '''
 '''
 
 doc = pq(html)
-print(doc("li"))
+print(doc("li.item-1"))
