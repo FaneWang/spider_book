@@ -1,7 +1,7 @@
 from chapter9.demo2.test1_store import RedisClient
 from chapter9.demo2.test2_get1 import Crawler
+from chapter9.demo2.settings import POOL_UPPER_THRESHOLD
 
-POOL_UPPER_THRESHOLD = 10000
 
 class Getter:
     def __init__(self):
@@ -23,7 +23,3 @@ class Getter:
                 for proxy in proxies:
                     # 将获取的代理添加到redis中，初始分数设置默认值100
                     self.redis.add(proxy)
-
-
-
-
