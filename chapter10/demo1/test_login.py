@@ -30,26 +30,26 @@ class Login:
             'password': password
         }
 
-        res = self.session.post(self.post_url, data=post_data, headers=self.headers)
-        if res.status_code == 200:
-            self.dynamics(res.text)
+        # res = self.session.post(self.post_url, data=post_data, headers=self.headers)
+        # if res.status_code == 200:
+        #     self.dynamics(res.text)
 
         res = self.session.get(self.logined_url, headers=self.headers)
         if res.status_code == 200:
             self.profile(res.text)
 
-    def dynamics(self, html):
-        selector = etree.HTML(html)
-        dynamics = selector.xpath('//div[contains(@class, "news")]//div[contains(@class, "alert")]')
-        for item in dynamics:
-            dynamic = ' '.join(item.xpath('.//div[@class="title"]//text()')).strip()
-            print(dynamic)
+    # def dynamics(self, html):
+    #     selector = etree.HTML(html)
+    #     dynamics = selector.xpath('//div[contains(@class, "news")]//div[contains(@class, "alert")]')
+    #     for item in dynamics:
+    #         dynamic = ' '.join(item.xpath('.//div[@class="title"]//text()')).strip()
+    #         print(dynamic)
 
     def profile(self, html):
-        selector = etree.HTML(html)
-        name = selector.xpath('//input[@id="user_profile_name"]/@value')[0]
-        email = selector.xpath('//select[@id="user_profile_email"]/option[@value!=""]/text()')
-        print(name, email)
+        # selector = etree.HTML(html)
+        # # name = selector.xpath('//input[@id="user_profile_name"]/@value')[0]
+        # email = selector.xpath('//span[@class="css-truncate-target"]/text()')
+        print(html)
 
 
 if __name__ == "__main__":
