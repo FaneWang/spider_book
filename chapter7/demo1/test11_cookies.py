@@ -1,7 +1,7 @@
 from selenium import webdriver
 
 browser = webdriver.Chrome()
-browser.get("https://www.zhihu.com/explore")
+browser.get("https://www.baidu.com")
 print(browser.get_cookies())
 browser.add_cookie({'name':'name','domain':'domain','value':'fane'})
 print(browser.get_cookies())
