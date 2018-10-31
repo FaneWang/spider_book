@@ -27,6 +27,7 @@ class UserItem(scrapy.Item):
     follows = Field()
     fans = Field()
     crawled_at = Field()
+    weibos_count = Field()
 
 
 class UserRelationItem(scrapy.Item):
@@ -37,7 +38,7 @@ class UserRelationItem(scrapy.Item):
 
 
 class WeiboItem(scrapy.Item):
-    collecion = 'weibos'
+    collection = 'weibos'
     id = Field()
     attitudes_count = Field()
     comments_count = Field()
